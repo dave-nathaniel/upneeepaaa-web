@@ -1,0 +1,20 @@
+/* Preloader container */
+.preloader {
+	position: fixed;
+	top: 0;
+	left: 0;
+	width: 100%;
+	height: 100%;
+	background-color: white; /* White background */
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	z-index: 9999; /* Ensure it stays on top */
+	opacity: 1; /* Initial opacity */
+	transition: opacity 1s ease-out; /* Smooth fade-out effect */
+}
+
+/* Fade-out effect */
+.fade-out {
+	opacity: 0; /* Set opacity to 0 for fade-out */
+}
