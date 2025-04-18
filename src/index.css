@@ -121,7 +121,7 @@ main > div {
 
 .overlay-div {
   position: relative;
-  background: url('./src/assets/images/giphy2.gif');
+  background: url('../assets/images/giphy2.gif');
   background-size: contain;
   background-position: 130%;
   background-repeat: no-repeat;

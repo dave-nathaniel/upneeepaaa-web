@@ -4,6 +4,7 @@ import { MDBContainer, MDBRow, MDBCol, MDBBtn, MDBCard, MDBCardBody, MDBCardTitl
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faChartLine, faBolt, faCalendarCheck, faArrowRight } from '@fortawesome/free-solid-svg-icons'
 import {TextField} from '@mui/material';
+import headerImage from '../assets/images/header.png';
 
 function Home() {
 	const [formData, setFormData] = useState({
@@ -42,7 +43,7 @@ function Home() {
 							height: "100%",
 						}}>
 							<img
-								src='./src/assets/images/header.png'
+								src={headerImage}
 								className=''
 								alt='...'
 								style={{
@@ -50,7 +51,7 @@ function Home() {
 								}}
 							/>
 						</div>
-						
+
 					</MDBCol>
 					<MDBCol lg={6} md={10} className="overlay-div ps-lg-5 px-md-5 px-sm-5 px-4 pb-3">
 						<div style={{
@@ -66,7 +67,7 @@ function Home() {
 					        Bill payments made easy.
 					      </MDBTypography>
 						</div>
-						
+
 						<MDBCard alignment='left' style={{
 							opacity: "0.8"
 						}}>
@@ -97,7 +98,7 @@ function Home() {
 								</Form>
 							</MDBCardBody>
 						</MDBCard>
-						
+
 					</MDBCol>
 				</MDBRow>
 			</div>
