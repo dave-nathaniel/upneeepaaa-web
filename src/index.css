@@ -7,11 +7,12 @@
 @import 'mdb-react-ui-kit/dist/css/mdb.min.css';
 
 /*
-	#33658A
+#33658A
 #86BBD8
 #2F4858
 #F6AE2D
 #F26419
+#f79321 
 */
 
 :root {
@@ -25,6 +26,7 @@ body {
 	background-color: var(--bs-body-bg);
 	color: var(--bs-body-color);
 	margin: 0;
+	font-family: 'Montserrat', 'Raleway', serif`;
 }
 
 body, html, #root, main {
@@ -41,18 +43,75 @@ main > div {
 	background-color: var(--bs-light);
 }
 
-.navbar .nav-link{
-	color: var(--primary-color);
+.MuiBox-root .main-content{
+	margin-top:5%;
 }
 
-
 .MuiBox-root .nav-link{
-	color: #F6AE2D;
+	color: #33658a;
+	font-family: 'Montserrat', sans-serif;
+	font-weight: 500;
+	text-transform: uppercase;
+}
+
+.MuiBox-root .active{
+	color: #f79321 !important;
+	border-color: inherit !important;
+}
+
+.MuiBox-root .nav-item{
+	border-top: none;
+	border-bottom: none;
+}
+
+.MuiBox-root .nav-item.active{
+	border-top: 2px solid #f79321;
+	border-bottom: 2px solid #f79321;
+}
+
+.MuiBox-root .nav-item.active a{
+	color: #f79321 !important;
 }
 
 .MuiBox-root .MuiAppBar-root{
+	background: transparent !important;
+}
+
+.MuiBox-root .MuiAppBar-root .MuiToolbar-root{
 	background: var(--white-gradient);
 	box-shadow: 5px 1px 1rem 0px rgb(134 187 216 / 49%);
+}
+
+.MuiBox-root .MuiAppBar-root .MuiToolbar-root .nav-link{
+	font-size: 14px;
+}
+
+.MuiBox-root .MuiAppBar-root .desktop-auth-menu{
+	width: 100%;
+	background-color: #ffffff77;
+	padding: 10px 0px;
+	backdrop-filter: blur(5px);
+	border-top: 1px solid #f6ae2d;
+}
+
+.MuiBox-root .MuiAppBar-root .desktop-auth-menu .card{
+	margin: 0 auto;
+	max-width: fit-content;
+	border-radius: 0px;
+	background-color: #ffffffc9;
+}
+
+.MuiBottomNavigation-root{
+	padding: 0px 0px !important;
+}
+
+.MuiBottomNavigation-root a{
+	padding-top: 15px;
+}
+
+.MuiBottomNavigation-root a.active{
+	color: #f79321;
+	border-top: 2px solid #f79321;
 }
 
 .bg-welcome {
@@ -78,17 +137,22 @@ main > div {
   background: radial-gradient(circle, rgb(240 248 255) 0%, rgb(255 255 255 / 35%) 100%);
 }
 
-/*.card {
-	background: rgba(255, 255, 255, 0.7);
-	backdrop-filter: blur(10px);
-	box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
-	border: none;
-}*/
+.bg-welcome .title{
+	font-weight: 600;
+	color: #33658a;
+}
+
+.bg-welcome .caption{
+	color: #f79321;
+}
+
+.bg-welcome .title, .bg-welcome .caption{
+	font-family: 'Montserrat', serif;
+}
 
 .card-title{
-	text-align: center;
-	font-family: 'Montserrat', sans-serif;
-
+	font-family: 'Raleway', sans-serif;
+	font-weight: 400;
 }
 
 button, .navbar, .card {

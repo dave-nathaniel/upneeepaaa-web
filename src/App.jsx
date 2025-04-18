@@ -8,6 +8,8 @@ import PasswordReset from './pages/PasswordReset';
 import Dashboard from './pages/Dashboard';
 import BillPayment from './pages/BillPayment';
 import ProfileManagement from './pages/ProfileManagement';
+import TransactionHistory from './pages/TransactionHistory';
+import Schedule from './pages/Schedule';
 import Support from './pages/Support';
 import NotFound from './pages/NotFound';
 import Header from './components/Header';
@@ -37,7 +39,7 @@ function App() {
 	return (screenLoading ? ( <PreLoader /> ) : (
 		<Box display="flex" flexDirection="column" minHeight="100vh">
 			<Header />
-			<Box component="main" flexGrow={1}>
+			<Box className="main-content" component="main" flexGrow={1}>
 
 				<Routes>
 					{/* Public Routes */}
@@ -79,8 +81,27 @@ function App() {
 							</ProtectedRoute>
 						}
 					/>
+					<Route
+						path="/transaction-history"
+						element={
+							<ProtectedRoute>
+								<PageTransition>
+									<TransactionHistory />
+								</PageTransition>
+							</ProtectedRoute>
+						}
+					/>
+					<Route
+						path="/schedule"
+						element={
+							<ProtectedRoute>
+								<PageTransition>
+									<Schedule />
+								</PageTransition>
+							</ProtectedRoute>
+						}
+					/>
 				</Routes>
-
 			</Box>
 			<Footer />
 		</Box>

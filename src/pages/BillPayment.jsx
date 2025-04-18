@@ -1,149 +1,298 @@
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
 import {
-    Box,
-    Container,
-    Grid,
     Typography,
-    Card,
-    CardContent,
-    TextField,
     Button,
-    MenuItem,
-    Modal,
+    Stepper,
+    Step,
+    StepLabel,
+    StepContent,
+    Paper,
+    Box,
+    CircularProgress
 } from '@mui/material';
 import Swal from 'sweetalert2';
 
+import { MDBContainer, MDBRow, MDBCol, MDBCard, MDBCardBody, MDBTypography, MDBCardHeader, MDBCardFooter } from 'mdb-react-ui-kit';
+
+import StepOne from '../components/StepOne';
+import StepTwo from '../components/StepTwo';
+import StepThree from '../components/StepThree';
+import { billAPI, paymentAPI } from '../services/api';
+
+const steps = [
+    {
+        "label": "Biller Details",
+        "description": "Select bill category, biller, and service package",
+        "optional": false,
+    },
+    {
+        "label": "Customer Verification",
+        "description": "Enter meter/account details and verify customer",
+        "optional": false,
+    },
+    {
+        "label": "Payment",
+        "description": "Complete payment process",
+        "optional": false,
+    },
+];
+
 function BillPayment() {
-    const [formData, setFormData] = useState({
+    const [activeStep, setActiveStep] = useState(0);
+    const [loading, setLoading] = useState(false);
+    const [paymentData, setPaymentData] = useState({
+        // Step 1 data
         category: '',
+        categoryId: '',
+        biller: '',
+        billerId: '',
+        package: '',
+        packageId: '',
+
+        // Step 2 data
         details: '',
         amount: '',
+        customerName: '',
+        customerAddress: '',
+
+        // Step 3 data
+        paymentMethod: '',
+        reference: '',
+        status: ''
     });
-    const [showModal, setShowModal] = useState(false);
 
-    const handleChange = (e) => {
-        setFormData({
-            ...formData,
-            [e.target.name]: e.target.value,
+    const stepOneFormRef = useRef(null);
+    const stepTwoFormRef = useRef(null);
+    const stepThreeFormRef = useRef(null);
+
+    // Handle step one completion
+    const handleStepOneSuccess = (data) => {
+        setPaymentData(prev => ({
+            ...prev,
+            ...data
+        }));
+        setActiveStep(1);
+    };
+
+    // Handle step two completion
+    const handleStepTwoSuccess = (data) => {
+        console.log(data);
+		setPaymentData(prev => ({
+            ...prev,
+            ...data
+        }));
+        setActiveStep(2);
+    };
+
+    // Handle step three completion (payment)
+    const handleStepThreeSuccess = async (data) => {
+        try {
+            setLoading(true);
+
+            // Combine all data for payment processing
+            const finalPaymentData = {
+                ...paymentData,
+                ...data,
+                // Add payment gateway ID if provided in the payment method data
+                paymentGatewayId: data.paymentGatewayId || 1 // Default to first gateway if not specified
+            };
+
+            // Process payment using the new payment API
+            const response = await paymentAPI.createPayment(finalPaymentData);
+
+            setPaymentData(prev => ({
+                ...prev,
+                ...data,
+                reference: response.reference,
+                status: response.status || 'pending'
+            }));
+
+            Swal.fire({
+                icon: 'success',
+                title: 'Payment Successful',
+                text: `Your payment has been initiated. Reference: ${response.reference}`,
+                footer: response.payment_url ? 
+                    `<a href="${response.payment_url}" target="_blank">Complete payment on gateway</a>` : 
+                    ''
+            });
+
+            if (response.payment_url) {
+                // If there's a payment URL, open it in a new tab
+                window.open(response.payment_url, '_blank');
+            }
+
+            setActiveStep(3); // Move to completion step
+        } catch (error) {
+            console.error('Payment error:', error);
+            Swal.fire({
+                icon: 'error',
+                title: 'Payment Failed',
+                text: error.message || 'An error occurred during payment processing. Please try again.',
+            });
+        } finally {
+            setLoading(false);
+        }
+    };
+
+    const handleNext = () => {
+        if (activeStep === 0) {
+            // Trigger StepOne form submission
+            if (stepOneFormRef.current) {
+                stepOneFormRef.current.dispatchEvent(new Event('submit', { 
+                    cancelable: true, 
+                    bubbles: true 
+                }));
+            }
+        } else if (activeStep === 1) {
+            // Trigger StepTwo form submission
+            if (stepTwoFormRef.current) {
+                stepTwoFormRef.current.dispatchEvent(new Event('submit', { 
+                    cancelable: true, 
+                    bubbles: true 
+                }));
+            }
+        } else if (activeStep === 2) {
+            // Trigger StepThree form submission
+            if (stepThreeFormRef.current) {
+                stepThreeFormRef.current.dispatchEvent(new Event('submit', { 
+                    cancelable: true, 
+                    bubbles: true 
+                }));
+            }
+        } else {
+            // Proceed to the next step
+            setActiveStep((prevActiveStep) => prevActiveStep + 1);
+        }
+    };
+
+    const handleBack = () => {
+        setActiveStep((prevActiveStep) => prevActiveStep - 1);
+    };
+
+    const handleReset = () => {
+        setPaymentData({
+            category: '',
+            categoryId: '',
+            biller: '',
+            billerId: '',
+            package: '',
+            packageId: '',
+            details: '',
+            amount: '',
+            customerName: '',
+            customerAddress: '',
+            paymentMethod: '',
+            reference: '',
+            status: ''
         });
-    };
-
-    const handleSubmit = (e) => {
-        e.preventDefault();
-        setShowModal(true);
-    };
-
-    const handleConfirm = () => {
-        setShowModal(false);
-        Swal.fire({
-            title: 'Payment Successful',
-            text: `Your payment of ${formData.amount} for ${formData.category} has been processed successfully!`,
-            icon: 'success',
-            confirmButtonText: 'Okay',
-        });
-        console.log('Form submitted:', formData);
-    };
-
-    const handleClose = () => {
-        setShowModal(false);
+        setActiveStep(0);
     };
 
     return (
-        <Container maxWidth="md" sx={{ py: 15 }}>
-            <Typography variant="h4" gutterBottom>
-                Bill Payment
-            </Typography>
-            <Card elevation={3}>
-                <CardContent>
-                    <form onSubmit={handleSubmit}>
-                        <Grid container spacing={3}>
-                            <Grid item xs={12}>
-                                <TextField
-                                    select
-                                    fullWidth
-                                    name="category"
-                                    value={formData.category}
-                                    onChange={handleChange}
-                                    label="Bill Category"
-                                    required
-                                >
-                                    <MenuItem value="">Select Category</MenuItem>
-                                    <MenuItem value="electricity">Electricity</MenuItem>
-                                    <MenuItem value="water">Water</MenuItem>
-                                    <MenuItem value="internet">Internet</MenuItem>
-                                </TextField>
-                            </Grid>
-                            <Grid item xs={12}>
-                                <TextField
-                                    fullWidth
-                                    name="details"
-                                    value={formData.details}
-                                    onChange={handleChange}
-                                    label="Meter/Account Details"
-                                    required
-                                />
-                            </Grid>
-                            <Grid item xs={12}>
-                                <TextField
-                                    fullWidth
-                                    type="number"
-                                    name="amount"
-                                    value={formData.amount}
-                                    onChange={handleChange}
-                                    label="Amount"
-                                    required
-                                />
-                            </Grid>
-                            <Grid item xs={12}>
-                                <Button
-                                    type="submit"
-                                    variant="contained"
-                                    color="primary"
-                                    fullWidth
-                                    disabled={
-                                        !formData.category ||
-                                        !formData.details ||
-                                        !formData.amount
-                                    }
-                                >
-                                    Pay Now
-                                </Button>
-                            </Grid>
-                        </Grid>
-                    </form>
-                </CardContent>
-            </Card>
+        <MDBContainer className="mt-5 pt-5">
+            <MDBRow className="d-flex justify-content-center">
 
-            <Modal open={showModal} onClose={handleClose}>
-                <Box
-                    sx={{
-                        position: 'absolute',
-                        top: '50%',
-                        left: '50%',
-                        transform: 'translate(-50%, -50%)',
-                        bgcolor: 'background.paper',
-                        p: 4,
-                        borderRadius: 2,
-                        boxShadow: 24,
-                    }}
-                >
-                    <Typography variant="h6" gutterBottom>
-                        Confirm Payment
-                    </Typography>
-                    <Typography sx={{ mb: 3 }}>
-                        Are you sure you want to pay {formData.amount} for {formData.category}?
-                    </Typography>
-                    <Box display="flex" justifyContent="flex-end" gap={2}>
-                        <Button onClick={handleClose} variant="outlined">
-                            Cancel
-                        </Button>
-                        <Button onClick={handleConfirm} variant="contained" color="primary">
-                            Confirm
-                        </Button>
-                    </Box>
-                </Box>
-            </Modal>
-        </Container>
+                <MDBCol size="12" md={8} lg={8} className="pb-3">
+                    <Stepper activeStep={activeStep} orientation="vertical">
+                        {steps.map((step, index) => (
+                            <Step key={step.label}>
+                                <StepLabel>
+                                    <MDBTypography className="card-title" tag='h5'>
+                                        {step.label}
+                                    </MDBTypography>
+                                </StepLabel>
+                                <StepContent>
+
+                                    <MDBCard className="shadow-0">
+                                        <MDBCardHeader>
+                                            <Typography variant="caption">{step.description}</Typography>
+                                        </MDBCardHeader>
+                                        <MDBCardBody>
+                                            {index === 0 && (
+                                                <StepOne 
+                                                    ref={stepOneFormRef} 
+                                                    onSuccess={handleStepOneSuccess} 
+                                                />
+                                            )}
+                                            {index === 1 && (
+                                                <StepTwo 
+                                                    ref={stepTwoFormRef} 
+                                                    onSuccess={handleStepTwoSuccess}
+                                                    billerData={{
+                                                        categoryId: paymentData.categoryId,
+                                                        billerId: paymentData.billerId,
+                                                        packageId: paymentData.packageId
+                                                    }}
+                                                />
+                                            )}
+                                            {index === 2 && (
+                                                <StepThree 
+                                                    ref={stepThreeFormRef} 
+                                                    onSuccess={handleStepThreeSuccess}
+                                                    paymentData={paymentData}
+                                                />
+                                            )}
+                                        </MDBCardBody>
+                                        <MDBCardFooter>
+                                           <Button
+                                                variant="contained"
+                                                onClick={handleNext}
+                                                sx={{ mt: 1, mr: 1 }}
+                                                disabled={loading}
+                                            >
+                                                {loading ? (
+                                                    <CircularProgress size={24} />
+                                                ) : (
+                                                    index === steps.length - 1 ? "Complete Payment" : "Continue"
+                                                )}
+                                            </Button>
+                                            <Button
+                                                disabled={index === 0 || loading}
+                                                onClick={handleBack}
+                                                sx={{ mt: 1, mr: 1 }}
+                                            >
+                                                Back
+                                            </Button>
+                                        </MDBCardFooter>
+                                    </MDBCard>
+                                </StepContent>
+                            </Step>
+                        ))}
+                    </Stepper>
+                    {activeStep === steps.length && (
+                        <Paper square elevation={0} sx={{ p: 3 }}>
+                            <Typography variant="h6" gutterBottom>
+                                Payment Completed Successfully
+                            </Typography>
+                            <Box sx={{ mb: 2 }}>
+                                <Typography variant="body1">
+                                    <strong>Reference:</strong> {paymentData.reference}
+                                </Typography>
+                                <Typography variant="body1">
+                                    <strong>Amount:</strong> ₦{paymentData.amount}
+                                </Typography>
+                                <Typography variant="body1">
+                                    <strong>Biller:</strong> {paymentData.biller}
+                                </Typography>
+                                <Typography variant="body1">
+                                    <strong>Customer:</strong> {paymentData.customerName}
+                                </Typography>
+                                <Typography variant="body1">
+                                    <strong>Status:</strong> {paymentData.status}
+                                </Typography>
+                            </Box>
+                            <Button 
+                                variant="contained" 
+                                onClick={handleReset} 
+                                sx={{ mt: 1, mr: 1 }}
+                            >
+                                Make Another Payment
+                            </Button>
+                        </Paper>
+                    )}
+                </MDBCol>
+            </MDBRow>
+        </MDBContainer>
     );
 }
 

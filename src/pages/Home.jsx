@@ -1,8 +1,8 @@
 import React, { useState } from 'react'
-import { Form } from 'react-bootstrap'
-import { MDBContainer, MDBRow, MDBCol, MDBBtn, MDBCard, MDBCardBody, MDBCardTitle, MDBInput, MDBInputGroup, MDBTypography } from 'mdb-react-ui-kit'
+import { Form, Button } from 'react-bootstrap'
+import { MDBContainer, MDBRow, MDBCol, MDBBtn, MDBCard, MDBCardBody, MDBCardTitle, MDBInput, MDBInputGroup, MDBTypography } from 'mdb-react-ui-kit';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faChartLine, faBolt, faCalendarCheck } from '@fortawesome/free-solid-svg-icons'
+import { faChartLine, faBolt, faCalendarCheck, faArrowRight } from '@fortawesome/free-solid-svg-icons'
 import {TextField} from '@mui/material';
 
 function Home() {
@@ -57,12 +57,12 @@ function Home() {
 							"position": "relative",
 
 						}}>
-							<MDBTypography tag='div' className='fw-normal display-2 pb-1 mb-3 border-bottom pt-0' style={{
+							<MDBTypography tag='div' className='title fw-normal display-2 pb-1 mb-3 pt-0' style={{
 								color: "#2f4858"
 							}}>
 					      UpNeeePaaa
 					    </MDBTypography>
-					      <MDBTypography tag='div' className='display-6 text-muted pb-3 mb-3'>
+					      <MDBTypography tag='div' className='caption display-6 pb-3 mb-3'>
 					        Bill payments made easy.
 					      </MDBTypography>
 						</div>
@@ -72,16 +72,28 @@ function Home() {
 						}}>
 							<MDBCardBody>
 								<Form onSubmit={handleSubmit}>
-									<MDBRow className="mb-4">
+									<MDBRow className="justify-content-end">
+										<MDBCol size={12} className="mb-3">
+												<TextField
+													variant="standard"
+													size="normal"
+													type="text"
+													name="identifier"
+													id="outlined-required" 
+													label="Your Email or Phone Number"
+													required
+													fullWidth
+													autoComplete={true}
+													value={formData.identifier}
+													onChange={handleChange}
+												/>
+										</MDBCol>
 										<MDBCol>
-												<TextField id="outlined-required" label="Email or Phone" fullWidth  />
+											<Button size="lg" variant="primary" className="rounded-pill px-4 float-end" type="submit" disabled={!formData.identifier}>
+												Get Started <FontAwesomeIcon icon={faArrowRight} />
+											</Button>
 										</MDBCol>
 									</MDBRow>
-									<div className="">
-										<MDBBtn variant="primary" type="submit" size="lg" disabled={!formData.identifier}>
-											Get Started
-										</MDBBtn>
-									</div>
 								</Form>
 							</MDBCardBody>
 						</MDBCard>
@@ -91,7 +103,7 @@ function Home() {
 			</div>
 
 			<MDBContainer fluid={true} className="px-0" style={{
-					background: "#2f4858",
+					background: "#33658a",
 				}}>
 				<MDBContainer className="py-5 px-0">
 					<MDBCard className='text-center p-3'  style={{

@@ -5,7 +5,12 @@ import { Container, Grid, Typography, Button } from '@mui/material';
 function Footer() {
     return (
         <footer>
-            <Container maxWidth="lg" sx={{ py: 3, mt: 5, borderTop: '1px solid #ddd' }}>
+            <Container maxWidth="lg" sx={{ 
+                py: 3, 
+                mt: 5, 
+                borderTop: '1px solid #ddd', 
+                display: { xs: 'none', md: 'block' } 
+            }}>
                 <Grid container spacing={3} justifyContent="center">
                     <Grid item>
                         <Button component={Link} to="#" color="inherit" size="small">

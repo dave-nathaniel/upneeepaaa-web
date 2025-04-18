@@ -19,7 +19,7 @@ import AuthContext from '../context/AuthContext';
 
 function Login() {
 	const [formData, setFormData] = useState({
-		email: '',
+		username: '',
 		password: '',
 	});
 
@@ -34,7 +34,7 @@ function Login() {
 
 	const handleSubmit = (e) => {
 		e.preventDefault();
-		doLogin();
+		doLogin(formData);
 		console.log('Form submitted:', formData);
 	};
 
@@ -50,15 +50,15 @@ function Login() {
 							<Box component="form" onSubmit={handleSubmit}>
 								<Box mb={3}>
 									<TextField
-										type="email"
-										name="email"
+										type="text"
+										name="username"
 										label="Enter or Phone"
 										id="outlined-required-1"
-										autoComplete='true'
 										margin="dense"
 										required
 										fullWidth
-										value={formData.email}
+										value={formData.username}
+										autoComplete={true}
 										onChange={handleChange}
 										InputProps={{
 											startAdornment: (
