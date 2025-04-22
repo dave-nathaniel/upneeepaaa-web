@@ -107,19 +107,23 @@ function BillPayment() {
                 status: response.status || 'pending'
             }));
 
-            Swal.fire({
-                icon: 'success',
-                title: 'Payment Successful',
-                text: `Your payment has been initiated. Reference: ${response.reference}`,
-                footer: response.payment_url ? 
-                    `<a href="${response.payment_url}" target="_blank">Complete payment on gateway</a>` : 
-                    ''
-            });
 
-            if (response.payment_url) {
-                // If there's a payment URL, open it in a new tab
-                window.open(response.payment_url, '_blank');
-            }
+			if (response.payment_url) {
+				Swal.fire({
+					icon: 'info',
+					title: 'Payment Initiated',
+					text: `Redirecting to Payment Gateway...`,
+					showConfirmButton: false,
+					footer: response.payment_url ?
+						`<a href="${response.payment_url}">Complete payment on gateway</a>` :
+						''
+				});
+				setTimeout(()=>{
+					// If there's a payment URL, open it in a new tab
+					window.location.href = response.payment_url;
+				}, 2000);
+			}
+
 
             setActiveStep(3); // Move to completion step
         } catch (error) {
