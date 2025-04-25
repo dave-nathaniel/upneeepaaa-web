@@ -1,12 +1,13 @@
 import React, { useState, useContext } from 'react';
 import { Form, Button } from 'react-bootstrap';
-import { MDBContainer, MDBRow, MDBCol, MDBBtn, MDBCard, MDBCardBody, MDBCardTitle, MDBInput, MDBInputGroup, MDBTypography } from 'mdb-react-ui-kit';
+import { MDBContainer, MDBRow, MDBCol, MDBBtn, MDBCard, MDBCardBody, MDBCardTitle, MDBInput, MDBInputGroup, MDBTypography} from 'mdb-react-ui-kit';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faChartLine, faBolt, faCalendarCheck, faArrowRight, faEnvelope, faLock, faUser, faPhone } from '@fortawesome/free-solid-svg-icons';
-import { TextField, InputAdornment, Box } from '@mui/material';
+import { TextField, InputAdornment, Box, Divider, Typography  } from '@mui/material';
 import headerImage from '../assets/images/header.png';
 
 import AuthContext from '../context/AuthContext';
+import { GoogleLogin } from '@react-oauth/google';
 
 function Home() {
 	const [formData, setFormData] = useState({
@@ -18,7 +19,7 @@ function Home() {
 
 	const [showModal, setShowModal] = useState(false)
 
-	const { doSignup } = useContext(AuthContext);
+	const { doSignup, doGoogleLogin  } = useContext(AuthContext);
 
 	const handleChange = (e) => {
 		setFormData({
@@ -94,7 +95,7 @@ function Home() {
 												type="text"
 												name="name"
 												id="outlined-required-name" 
-												label="Full Name"
+												label="Name"
 												required
 												fullWidth
 												autoComplete='true'
@@ -115,7 +116,7 @@ function Home() {
 												type="email"
 												name="email"
 												id="outlined-required-email" 
-												label="Email Address"
+												label="Email"
 												required
 												fullWidth
 												autoComplete='true'
@@ -136,7 +137,7 @@ function Home() {
 												type="tel"
 												name="phone"
 												id="outlined-required-phone" 
-												label="Phone Number"
+												label="Phone"
 												required
 												fullWidth
 												autoComplete='true'
@@ -172,19 +173,43 @@ function Home() {
 												}}
 											/>
 										</MDBCol>
-										<MDBCol>
+										<MDBCol className="text-center">
 											<Button 
 												size="lg" 
 												variant="primary" 
-												className="rounded-pill px-4 float-end" 
+												className="rounded-pill px-4 mx-0"
 												type="submit" 
 												disabled={!formData.name || !formData.email || !formData.phone || !formData.password}
 											>
 												Get Started <FontAwesomeIcon icon={faArrowRight} />
 											</Button>
 										</MDBCol>
+										<Box my={3}>
+											<Divider>
+												<Typography variant="body2" color="textSecondary">
+													OR
+												</Typography>
+											</Divider>
+										</Box>
+
+										<Box display="flex" justifyContent="center" mb={2}>
+											<GoogleLogin
+												onSuccess={doGoogleLogin}
+												onError={() => {
+													console.log('Login Failed');
+												}}
+												useOneTap
+												theme="filled_blue"
+												text="continue_with"
+												shape="pill"
+											/>
+										</Box>
+
 									</MDBRow>
 								</Form>
+
+
+
 							</MDBCardBody>
 						</MDBCard>
 

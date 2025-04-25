@@ -36,6 +36,25 @@ export const authAPI = {
     };
   },
 
+  googleLogin: async (tokenId) => {
+    const response = await fetch(`${API_BASE_URL}/user/google-auth`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ token: tokenId }),
+    });
+    const data = await response.json();
+    if (data.status !== 'success') {
+      throw new Error(data.message || 'Google authentication failed');
+    }
+    return {
+      token: data.data.access,
+      refreshToken: data.data.refresh,
+      user: data.data.user
+    };
+  },
+
   signup: async (userData) => {
     // Transform the userData to match the expected format
     const requestData = {

@@ -2,6 +2,7 @@ import React, { createContext, useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { authAPI } from '../services/api';
 import Swal from 'sweetalert2';
+import { jwtDecode } from 'jwt-decode';
 
 const AuthContext = createContext();
 
@@ -114,6 +115,46 @@ export const AuthProvider = ({ children }) => {
 		}
 	};
 
+	const doGoogleLogin = async (credentialResponse) => {
+		try {
+			setLoading(true);
+			setError(null);
+
+			// Get the token from the credential response
+			const tokenId = credentialResponse.credential;
+
+			// Send the token to the backend for verification
+			const data = await authAPI.googleLogin(tokenId);
+
+			// Store tokens and user data
+			localStorage.setItem('authToken', data.token);
+			localStorage.setItem('refreshToken', data.refreshToken);
+			localStorage.setItem('authUser', JSON.stringify(data.user));
+
+			setAuthToken(data.token);
+			setAuthUser(data.user);
+
+			Swal.fire({
+				icon: 'success',
+				title: 'Login Successful',
+				text: 'Welcome!',
+				timer: 1500,
+				showConfirmButton: false
+			});
+			navigate('/dashboard');
+		} catch (error) {
+			console.error('Google login error:', error);
+			setError(error.message);
+			Swal.fire({
+				icon: 'error',
+				title: 'Google Login Failed',
+				text: error.message || 'Could not authenticate with Google. Please try again.',
+			});
+		} finally {
+			setLoading(false);
+		}
+	};
+
 	const doLogout = () => {
 		setAuthToken(null);
 		setAuthUser(null);
@@ -138,6 +179,7 @@ export const AuthProvider = ({ children }) => {
 			doLogin, 
 			doSignup,
 			doResetPassword,
+			doGoogleLogin,
 			doLogout 
 		}}>
 			{children}
