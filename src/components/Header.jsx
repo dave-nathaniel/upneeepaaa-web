@@ -247,7 +247,7 @@ function Header({ toggleDarkMode }) {
 				}}
 			>
 			  	{authToken && auth_pages.filter(page => page.title.toLowerCase() !== 'profile').map((page, index) => (
-					<BottomNavigationAction component={NavLink} to={page.link} key={"bnav-" + index} sx={{ color: page.color}} label={page.title} icon={<FontAwesomeIcon icon={page.icon} />} />
+					<BottomNavigationAction component={NavLink} to={page.link} key={"bnav-" + index} sx={{ color: page.color}} label={page.title} icon={<FontAwesomeIcon icon={page.icon} size={'2x'} />} />
 			  	))}
 			</BottomNavigation>
 		</Paper>

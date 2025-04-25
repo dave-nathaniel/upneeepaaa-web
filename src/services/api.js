@@ -2,6 +2,7 @@
 // This file contains the base configuration for API calls and utility functions
 
 const API_BASE_URL = 'https://upneeepaaa.com/API/api/v1';
+// const API_BASE_URL = 'http://localhost:8000/api/v1';
 
 // Helper function to handle API responses
 const handleResponse = async (response) => {
@@ -39,10 +40,8 @@ export const authAPI = {
     // Transform the userData to match the expected format
     const requestData = {
       email: userData.email,
-      username: userData.username,
+      name: userData.name,
       password: userData.password,
-      firstname: userData.firstName || userData.firstname,
-      lastname: userData.lastName || userData.lastname,
       phone: userData.phone
     };
 

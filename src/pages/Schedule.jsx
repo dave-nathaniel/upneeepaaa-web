@@ -360,17 +360,14 @@ function Schedule() {
         <MDBContainer className="mt-5 pt-5">
             <MDBRow className="d-flex justify-content-center">
                 <MDBCol size="12">
-                    <div className="d-flex justify-content-between align-items-center mb-4">
-                        <Typography variant="h4" component="h1">
-                            Scheduled Payments
-                        </Typography>
+                    <div className="d-flex justify-content-end align-items-center mb-4">
                         <MDBBtn 
                             color="primary" 
                             onClick={() => setCreateDialogOpen(true)}
                             disabled={loading}
                         >
-                            <FontAwesomeIcon icon={faPlus} className="me-2" />
-                            New Subscription
+                            <FontAwesomeIcon icon={faPlus} className="me-1" />
+                            New
                         </MDBBtn>
                     </div>
 

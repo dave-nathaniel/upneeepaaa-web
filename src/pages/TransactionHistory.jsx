@@ -170,9 +170,6 @@ function TransactionHistory() {
         <MDBContainer className="mt-5 pt-5">
             <MDBRow className="d-flex justify-content-center">
                 <MDBCol size="12">
-                    <Typography variant="h4" component="h1" gutterBottom className="mb-4">
-                        Transaction History
-                    </Typography>
 
                     {/* Filters and Search */}
                     <MDBCard className="mb-4 shadow-sm">

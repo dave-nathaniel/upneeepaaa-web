@@ -66,15 +66,15 @@ function Dashboard() {
 				</MDBCol>
 				{quickActions.map((action, index) => (
 					<MDBCol key={"dbaction-" + index} size="4" sm="4" md="4" lg="2">
-						<MDBCard className="shadow-0 rounded-0 text-center h-100 d-flex flex-column justify-content-center align-items-center py-2 pt-4 px-1" style={{
-							border: "2px solid #EEE",
+						<MDBCard className="shadow rounded text-center h-100 d-flex flex-column justify-content-center align-items-center py-1 pt-4 px-1" style={{
+							border: "1px solid #FFF",
 							color: "#33658A",
 						}}>
 							<MDBBtn size='lg' className='mx-2 rounded-circle'  style={{ 
 								backgroundColor: "#33658A",
 								display: 'inherit',
-								border: "2px solid #33658A",
-								padding: "20px",
+								border: "1px solid #86BBD8",
+								padding: "10px",
 								fontSize: "20px",
 								boxShadow: "none",
 								color: "#FFF"

@@ -16,9 +16,7 @@ import AuthContext from '../context/AuthContext';
 
 function Signup() {
 	const [formData, setFormData] = useState({
-		firstname: '',
-		lastname: '',
-		username: '',
+		name: '',
 		email: '',
 		phone: '',
 		password: ''
@@ -52,61 +50,19 @@ function Signup() {
 								<Box mb={3}>
 									<TextField
 										type="text"
-										name="firstname"
-										label="First Name"
+										name="name"
+										label="Full Name"
 										id="outlined-required-1"
 										margin="dense"
 										required
 										fullWidth
-										value={formData.firstname}
+										value={formData.name}
 										autoComplete={true}
 										onChange={handleChange}
 										InputProps={{
 											startAdornment: (
 												<InputAdornment position="start">
 													<FontAwesomeIcon icon={faUser} />
-												</InputAdornment>
-											),
-										}}
-									/>
-								</Box>
-								<Box mb={3}>
-									<TextField
-										type="text"
-										name="lastname"
-										label="Last Name"
-										id="outlined-required-2"
-										margin="dense"
-										required
-										fullWidth
-										value={formData.lastname}
-										autoComplete={true}
-										onChange={handleChange}
-										InputProps={{
-											startAdornment: (
-												<InputAdornment position="start">
-													<FontAwesomeIcon icon={faUser} />
-												</InputAdornment>
-											),
-										}}
-									/>
-								</Box>
-								<Box mb={3}>
-									<TextField
-										type="text"
-										name="username"
-										label="Username"
-										id="outlined-required-3"
-										margin="dense"
-										required
-										fullWidth
-										value={formData.username}
-										autoComplete={true}
-										onChange={handleChange}
-										InputProps={{
-											startAdornment: (
-												<InputAdornment position="start">
-													<FontAwesomeIcon icon={faUserTag} />
 												</InputAdornment>
 											),
 										}}

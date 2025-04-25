@@ -1,17 +1,24 @@
-import React, { useState } from 'react'
-import { Form, Button } from 'react-bootstrap'
+import React, { useState, useContext } from 'react';
+import { Form, Button } from 'react-bootstrap';
 import { MDBContainer, MDBRow, MDBCol, MDBBtn, MDBCard, MDBCardBody, MDBCardTitle, MDBInput, MDBInputGroup, MDBTypography } from 'mdb-react-ui-kit';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faChartLine, faBolt, faCalendarCheck, faArrowRight } from '@fortawesome/free-solid-svg-icons'
-import {TextField} from '@mui/material';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faChartLine, faBolt, faCalendarCheck, faArrowRight, faEnvelope, faLock, faUser, faPhone } from '@fortawesome/free-solid-svg-icons';
+import { TextField, InputAdornment, Box } from '@mui/material';
 import headerImage from '../assets/images/header.png';
+
+import AuthContext from '../context/AuthContext';
 
 function Home() {
 	const [formData, setFormData] = useState({
-		identifier: ''
+		name: '',
+		email: '',
+		phone: '',
+		password: ''
 	})
 
 	const [showModal, setShowModal] = useState(false)
+
+	const { doSignup } = useContext(AuthContext);
 
 	const handleChange = (e) => {
 		setFormData({
@@ -22,12 +29,19 @@ function Home() {
 
 	const handleSubmit = (e) => {
 		e.preventDefault()
-		setShowModal(true)
+		// Check if all required fields are filled
+		if (formData.name && formData.email && formData.phone && formData.password) {
+			setShowModal(true)
+			doSignup(formData);
+			console.log('Form submitted:', formData);
+		}
 	}
 
 	const handleConfirm = () => {
 		setShowModal(false)
-		console.log('Form submitted:', formData)
+		console.log('Registration form submitted:', formData)
+		// Here you would typically call an API to register the user
+		// Similar to doSignup(formData) in Signup.jsx
 	}
 
 	const handleClose = () => {
@@ -73,24 +87,99 @@ function Home() {
 						}}>
 							<MDBCardBody>
 								<Form onSubmit={handleSubmit}>
-									<MDBRow className="justify-content-end">
+									<MDBRow>
 										<MDBCol size={12} className="mb-3">
-												<TextField
-													variant="standard"
-													size="normal"
-													type="text"
-													name="identifier"
-													id="outlined-required" 
-													label="Your Email or Phone Number"
-													required
-													fullWidth
-													autoComplete={true}
-													value={formData.identifier}
-													onChange={handleChange}
-												/>
+											<TextField
+												margin="dense"
+												type="text"
+												name="name"
+												id="outlined-required-name" 
+												label="Full Name"
+												required
+												fullWidth
+												autoComplete='true'
+												value={formData.name}
+												onChange={handleChange}
+												InputProps={{
+													startAdornment: (
+														<InputAdornment position="start">
+															<FontAwesomeIcon icon={faUser} />
+														</InputAdornment>
+													),
+												}}
+											/>
+										</MDBCol>
+										<MDBCol size={12} className="mb-3">
+											<TextField
+												margin="dense"
+												type="email"
+												name="email"
+												id="outlined-required-email" 
+												label="Email Address"
+												required
+												fullWidth
+												autoComplete='true'
+												value={formData.email}
+												onChange={handleChange}
+												InputProps={{
+													startAdornment: (
+														<InputAdornment position="start">
+															<FontAwesomeIcon icon={faEnvelope} />
+														</InputAdornment>
+													),
+												}}
+											/>
+										</MDBCol>
+										<MDBCol size={12} className="mb-3">
+											<TextField
+												margin="dense"
+												type="tel"
+												name="phone"
+												id="outlined-required-phone" 
+												label="Phone Number"
+												required
+												fullWidth
+												autoComplete='true'
+												value={formData.phone}
+												onChange={handleChange}
+												InputProps={{
+													startAdornment: (
+														<InputAdornment position="start">
+															<FontAwesomeIcon icon={faPhone} />
+														</InputAdornment>
+													),
+												}}
+											/>
+										</MDBCol>
+										<MDBCol size={12} className="mb-3">
+											<TextField
+												margin="dense"
+												type="password"
+												name="password"
+												id="outlined-required-password" 
+												label="Password"
+												required
+												fullWidth
+												autoComplete='true'
+												value={formData.password}
+												onChange={handleChange}
+												InputProps={{
+													startAdornment: (
+														<InputAdornment position="start">
+															<FontAwesomeIcon icon={faLock} />
+														</InputAdornment>
+													),
+												}}
+											/>
 										</MDBCol>
 										<MDBCol>
-											<Button size="lg" variant="primary" className="rounded-pill px-4 float-end" type="submit" disabled={!formData.identifier}>
+											<Button 
+												size="lg" 
+												variant="primary" 
+												className="rounded-pill px-4 float-end" 
+												type="submit" 
+												disabled={!formData.name || !formData.email || !formData.phone || !formData.password}
+											>
 												Get Started <FontAwesomeIcon icon={faArrowRight} />
 											</Button>
 										</MDBCol>
