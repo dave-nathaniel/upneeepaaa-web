@@ -1,0 +1,37 @@
+name: Build React App
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+  workflow_dispatch: # Allows manual trigger from the Actions interface
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      # Checkout the repository
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      # Set up Node.js
+      - name: Set up Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '16' # Specify your Node.js version
+
+      # Install pnpm
+      - name: Install pnpm
+        run: npm install -g pnpm
+
+      # Install dependencies using pnpm
+      - name: Install dependencies
+        run: pnpm install
+
+      # Build the React app
+      - name: Build
+        run: pnpm run build
