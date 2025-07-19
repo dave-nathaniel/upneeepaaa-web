@@ -22,16 +22,12 @@ jobs:
       - name: Set up Node.js
         uses: actions/setup-node@v3
         with:
-          node-version: '18.12.1' # Specify your Node.js version
+          node-version: '18.12.1' # Specify your Node.js 
 
-      # Install pnpm
-      - name: Install pnpm
-        run: npm install -g pnpm
-
-      # Install dependencies using pnpm
+      # Install dependencies using npm
       - name: Install dependencies
-        run: pnpm install
+        run: npm install
 
       # Build the React app
       - name: Build
-        run: pnpm run build
+        run: npm run build
