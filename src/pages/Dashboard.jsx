@@ -91,7 +91,7 @@ function Dashboard() {
 				))}
 			</MDBRow>
 
-			<MDBCard className="mb-4 shadow-sm mt-5 px-0">
+			{/* <MDBCard className="mb-4 shadow-sm mt-5 px-0">
 				<MDBCardHeader>
 					<MDBCardTitle className="">
 						Power Usage Monitoring
@@ -100,9 +100,9 @@ function Dashboard() {
 				<MDBCardBody className="px-1">
 					<UsageChart />
 				</MDBCardBody>
-			</MDBCard>
+			</MDBCard> */}
 
-			<MDBCard className="shadow-sm">
+			<MDBCard className="mb-4 shadow-sm mt-5 px-0">
 				<MDBCardHeader>
 					<MDBCardTitle className="d-flex justify-content-between align-items-center">
 						<span>Recent Transactions</span>
