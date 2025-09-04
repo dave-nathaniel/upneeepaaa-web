@@ -10,6 +10,8 @@ import {
 } from '@mui/material';
 import { billAPI } from '../services/api';
 import Swal from 'sweetalert2';
+import CheckCircleIcon from '@mui/icons-material/CheckCircle';
+import CancelIcon from '@mui/icons-material/Cancel';
 
 const StepTwo = forwardRef((props, ref) => {
     const { billerData } = props;
@@ -28,6 +30,7 @@ const StepTwo = forwardRef((props, ref) => {
     const [verifying, setVerifying] = useState(false);
     const [error, setError] = useState(null);
     const [formErrors, setFormErrors] = useState([]);
+    const [verificationStatus, setVerificationStatus] = useState('idle'); // 'idle' | 'success' | 'error'
 
     // Reset form when biller data changes
     useEffect(() => {
@@ -41,6 +44,7 @@ const StepTwo = forwardRef((props, ref) => {
             verified: false
         });
         setError(null);
+        setVerificationStatus('idle');
     }, [billerData]);
 
     const handleChange = (e) => {
@@ -48,6 +52,11 @@ const StepTwo = forwardRef((props, ref) => {
             ...formData,
             [e.target.name]: e.target.value,
         });
+
+        // Reset button state when customer identifier changes
+        if (e.target.name === 'details') {
+            setVerificationStatus('idle');
+        }
 
         // Clear verification when details change
         if (e.target.name === 'details' && customerInfo.verified) {
@@ -61,7 +70,7 @@ const StepTwo = forwardRef((props, ref) => {
 
     const verifyCustomer = async () => {
         if (!formData.details) {
-            setError('Please enter meter/account details');
+            setError('Please enter a customer identifier (e.g. meter number, phone number, etc.).');
             return;
         }
 
@@ -78,24 +87,21 @@ const StepTwo = forwardRef((props, ref) => {
             const response = await billAPI.verifyCustomer(verificationData);
 
             console.log(response)
+            if(response.validationStatus === 'failed'){
+                throw new Error(response.validationMessage);
+            }
 
             // Handle the new response format
             const customerName = response.customerName || response.customer || '';
-            const customerAddress = response.customerAddress || 'Not available';
+            const customerAddress = response.customerAddress || '';
 
             setCustomerInfo({
                 name: customerName,
                 address: customerAddress,
                 verified: true
             });
-
-            Swal.fire({
-                icon: 'success',
-                title: 'Verification Successful',
-                text: `Customer verified: ${customerName}`,
-                timer: 1500,
-                showConfirmButton: false
-            });
+            setVerificationStatus('success');
+            
         } catch (error) {
             console.error('Customer verification error:', error);
             setError(error.message || 'Verification failed. Please check the details and try again.');
@@ -104,6 +110,7 @@ const StepTwo = forwardRef((props, ref) => {
                 address: '',
                 verified: false
             });
+            setVerificationStatus('error');
         } finally {
             setVerifying(false);
         }
@@ -114,7 +121,7 @@ const StepTwo = forwardRef((props, ref) => {
 
         // Validate form
         const errors = [];
-        if (!formData.details) errors.push('details');
+        if (!formData.details) errors.push('details', 'Please enter a customer identifier (e.g. meter number, phone number, etc.).');
         if (!formData.amount) errors.push('amount');
         if (!customerInfo.verified) errors.push('verification');
 
@@ -146,7 +153,7 @@ const StepTwo = forwardRef((props, ref) => {
                             name="details"
                             value={formData.details}
                             onChange={handleChange}
-                            label="Meter/Account Details"
+                            label="Customer Identifier"
                             variant="standard"
                             size="normal"
                             required
@@ -156,12 +163,20 @@ const StepTwo = forwardRef((props, ref) => {
                         />
                         <Button
                             variant="contained"
-                            color="primary"
+                            color={verificationStatus === 'success' || verificationStatus === 'error' ? 'inherit' : 'primary'}
                             onClick={verifyCustomer}
                             disabled={!formData.details || verifying}
                             sx={{ ml: 1, mb: 1 }}
                         >
-                            {verifying ? <CircularProgress size={24} /> : "Verify"}
+                            {verifying ? (
+                                <CircularProgress size={24} />
+                            ) : verificationStatus === 'success' ? (
+                                <CheckCircleIcon color="success" />
+                            ) : verificationStatus === 'error' ? (
+                                <CancelIcon color="error" />
+                            ) : (
+                                'Verify'
+                            )}
                         </Button>
                     </Box>
                 </Grid>
@@ -171,16 +186,21 @@ const StepTwo = forwardRef((props, ref) => {
                         <Alert severity="error">{error}</Alert>
                     </Grid>
                 )}
-
+                
                 {customerInfo.verified && (
                     <Grid item xs={12}>
                         <Alert severity="success">
-                            <Typography variant="subtitle1">
-                                <strong>Customer Name:</strong> {customerInfo.name}
-                            </Typography>
-                            <Typography variant="body2">
-                                <strong>Address:</strong> {customerInfo.address}
-                            </Typography>
+                            {/* show only the fields that are not empty */}
+                            {customerInfo.name && (
+                                <Typography variant="body2">
+                                    <strong>Customer Name:</strong> {customerInfo.name}
+                                </Typography>
+                            )}
+                            {customerInfo.address && (
+                                <Typography variant="body2">
+                                    <strong>Address:</strong> {customerInfo.address}
+                                </Typography>
+                            )}
                         </Alert>
                     </Grid>
                 )}
