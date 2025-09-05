@@ -8,12 +8,9 @@ import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import AuthContext from '../context/AuthContext';
 
 import MenuIcon from '@mui/icons-material/Menu';
-import RestoreIcon from '@mui/icons-material/Restore';
-import FavoriteIcon from '@mui/icons-material/Favorite';
-import LocationOnIcon from '@mui/icons-material/LocationOn';
 
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faClockRotateLeft, faCalendarCheck, faMoneyBillWave, faHouse, faUser, faPowerOff } from '@fortawesome/free-solid-svg-icons';
+import { faPowerOff, faUser } from '@fortawesome/free-solid-svg-icons';
 
 import logodark from '../assets/images/logo-dark.png';
 import logowhite from '../assets/images/logo-white.png';
@@ -38,35 +35,35 @@ const auth_pages = [
 	{
 		title: 'Dashboard',
 		description: 'Dashboard',
-		icon: faHouse,
+		icon: 'dashboard-layout',
 		link: '/dashboard',
 		color: "#33658a"
 	},
 	{
 		title: 'Pay Bills',
 		description: 'Quick and secure bill payments',
-		icon: faMoneyBillWave,
+		icon: 'cash',
 		link: '/bill-payment',
 		color: "#33658a"
 	},
 	{
 		title: 'History',
 		description: 'Detailed power consumption insights',
-		icon: faClockRotateLeft,
+		icon: 'clock',
 		link: '/transaction-history',
 		color: "#33658a",
 	},
 	{
 		title: 'Schedule',
 		description: 'Automate your recurring payments',
-		icon: faCalendarCheck,
+		icon: 'calendar',
 		link: '/schedule',
 		color: "#33658a"
 	},
 	{
 		title: 'Profile',
 		description: 'User profile.',
-		icon: faUser,
+		icon: 'user',
 		link: '/profile',
 		color: "#33658a"
 	},
@@ -203,7 +200,7 @@ function Header({ toggleDarkMode }) {
 									<MDBTabsLink className='border-0 h-100'
 										onClick={() => navigate(page.link)}
 									>
-										<FontAwesomeIcon className="me-2" icon={page.icon} /> {page.title}
+										{page.title}
 									</MDBTabsLink>
 								</MDBTabsItem>
 							))} 
@@ -246,8 +243,10 @@ function Header({ toggleDarkMode }) {
 					height: "auto"
 				}}
 			>
-			  	{authToken && auth_pages.filter(page => page.title.toLowerCase() !== 'profile').map((page, index) => (
-					<BottomNavigationAction component={NavLink} to={page.link} key={"bnav-" + index} sx={{ color: page.color}} label={page.title} icon={<FontAwesomeIcon icon={page.icon} size={'2x'} />} />
+			  	{authToken && auth_pages.filter(page => page.title.toLowerCase() !== '').map((page, index) => (
+					<BottomNavigationAction component={NavLink} to={page.link} key={"bnav-" + index} sx={{ color: '#33658a'}} label={page.title} 
+						icon = { <img width="24" height="24" src={`https://img.icons8.com/${page.color.replace('#', '')}/material-outlined/24/${page.icon}.png`} alt={page.title}/> }
+					/>
 			  	))}
 			</BottomNavigation>
 		</Paper>
